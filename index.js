@@ -46,8 +46,7 @@ Döküm: ${stack}`;
         return response.text();
     } catch (error) {
         console.error("AI Analiz Hatası Detayı:", error.message);
-        // Eğer hala 404 veriyorsa, alternatif olarak "gemini-pro" dene
-        return "AI analizi şu an yapılamıyor. Lütfen sistem yöneticisine danışın.";
+        return `AI analizi başarısız oldu: ${error.message}`;
     }
 }
 
