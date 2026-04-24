@@ -155,4 +155,5 @@ app.get('/all-errors', async (req, res) => {
     }
 });
 
-app.listen(3000, () => console.log("Smart Tracker Server 3000 portunda hazır!"));
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => console.log(`Smart Tracker Server ${PORT} portunda hazır!`));
