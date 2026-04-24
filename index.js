@@ -34,7 +34,7 @@ const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
 
 async function analyzeError(message, stack) {
     try {
-        const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash" });
+        const model = genAI.getGenerativeModel({ model: "gemini-2.0-flash" });
         
         // Kullanıcının istediği spesifik prompt
         const prompt = `Sen bir kıdemli yazılımcısın. Şu hatayı analiz et, kök nedenini bul ve düzeltilmiş kod bloğunu ver.
