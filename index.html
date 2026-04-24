@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <title>Smart Error Tracker Test Sayfası</title>
+    
+    <script>
+        class SmartTracker {
+            constructor(apiKey) {
+                this.apiKey = apiKey;
+                this.endpoint = "http://localhost:3000/report";
+                this.init();
+            }
+
+            init() {
+                window.onerror = (msg, url, line, col, error) => {
+                    console.log("Hata yakalandı, gönderiliyor...");
+                    this.send({ 
+                        message: msg, 
+                        stack: error?.stack, 
+                        type: 'JS_ERROR',
+                        location: `${url}:${line}:${col}`
+                    });
+                };
+            }
+
+            send(data) {
+                fetch(this.endpoint, {
+                    method: 'POST',
+                    headers: { 
+                        'Content-Type': 'application/json', 
+                        'x-api-key': this.apiKey 
+                    },
+                    body: JSON.stringify(data)
+                })
+                .then(res => console.log("Server yanıtı:", res.status))
+                .catch(err => console.error("Gönderim hatası:", err));
+            }
+        }
+
+        // 2. Adım: Tracker'ı başlat
+        const tracker = new SmartTracker("TEST_KEY_123");
+    </script>
+</head>
+<body>
+    <div style="text-align: center; margin-top: 50px; font-family: sans-serif;">
+        <h1>Smart Error Tracker Test Paneli</h1>
+        <p>Aşağıdaki butona bastığında bilerek bir hata oluşacak ve server'a gidecek.</p>
+        
+        <button onclick="olmayanFonksiyon()" style="padding: 15px 30px; background: red; color: white; border: none; cursor: pointer; border-radius: 5px;">
+            Hata Çıkart!
+        </button>
+
+        <p id="status" style="margin-top: 20px; color: green;"></p>
+    </div>
+</body>
+</html>

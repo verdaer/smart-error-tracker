@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <title>Smart Error Tracker - Admin Panel</title>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #f4f7f6; padding: 20px; }
+        .container { max-width: 1000px; margin: auto; background: white; padding: 20px; border-radius: 10px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+        h1 { color: #333; text-align: center; }
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        th, td { padding: 12px; text-align: left; border-bottom: 1px solid #ddd; }
+        th { background-color: #007bff; color: white; }
+        tr:hover { background-color: #f1f1f1; cursor: pointer; }
+        .ai-box { background: #e7f3ff; border-left: 5px solid #007bff; padding: 15px; margin-top: 10px; display: none; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Smart Error Tracker Dashboard</h1>
+        <table id="errorTable">
+            <thead>
+                <tr>
+                    <th>Tarih</th>
+                    <th>Hata Mesajı</th>
+                    <th>Tür</th>
+                    <th>İşlem</th>
+                </tr>
+            </thead>
+            <tbody>
+                </tbody>
+        </table>
+        <div id="details" class="ai-box">
+            <h3>AI Çözüm Önerisi:</h3>
+            <p id="aiText"></p>
+        </div>
+    </div>
+
+    <script>
+        async function fetchErrors() {
+            const response = await fetch('http://localhost:3000/all-errors');
+            const errors = await response.json();
+            const tableBody = document.querySelector("#errorTable tbody");
+
+            tableBody.innerHTML = errors.map(err => `
+                <tr onclick="showAiDetail('${err.aiAnalysis.replace(/'/g, "&apos;")}')">
+                    <td>${new Date(err.createdAt).toLocaleString()}</td>
+                    <td><strong>${err.message}</strong></td>
+                    <td>${err.apiKey || 'Genel'}</td>
+                    <td><button>Detayı Gör</button></td>
+                </tr>
+            `).join('');
+        }
+
+        function showAiDetail(text) {
+            const box = document.getElementById("details");
+            const aiText = document.getElementById("aiText");
+            aiText.innerText = text;
+            box.style.display = "block";
+            box.scrollIntoView({ behavior: 'smooth' });
+        }
+
+        fetchErrors();
+    </script>
+</body>
+</html>
